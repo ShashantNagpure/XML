@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Employees>
+	<Employee>
+		<name nationality="indian">Pankaj</name>
+		<age>29</age>
+		<role>Java Developer</role>
+		<gender>Male</gender>
+	</Employee>
+	<Employee>
+		<name>Lisa</name>
+		<age>35</age>
+		<role>CSS Developer</role>
+		<gender>Female</gender>
+	</Employee>
+</Employees>
+
+FLOW
+
+1.ISO XML FILE SCHEMA USED FOR MAPPING INTO CCF SCHEMA
+how usually mapping USUALLY done? FROM SCHEMA TO CCF
+
+AJAX CALL IS MUCH EASIER FOR EACH DRAG AND DROP
+RATHER THAN PARSING ENTIRE HTML FILE
+
+HOW IS CCF NORMALLY VIEWED SO THAT VALUES CAN BE PUT INTO IT?
+
+FLOW IS THIS
+
+xml file parsed dom element is created respectively converted into node pojo class
+in which xpath is added.
+
+node is printed in recursive jsp manner in dynamic tree view
+
+drag and drop from left to right will add elements
+ - in ui changes are made
+ - also for when new element is added add attribute of xpath by looking from  
+ - also ajax is executed in which xpath of left and right is transmitted to server
+   where controller will make changes in dom structure
+ - remove functionality where also ajax is executed in which xpath of left and right is transmitted to server
+   where controller will make changes in dom structure
+ - new element is created in right side with x path visible, this element will have option for deleting itself when hovered over
+ - ajax function will be called in which xpath of parent element is given and a string of text for the element itself which will deleted in dom
+ 
+- drag and drop: ajax call to a 
+also options of adding rules respectively
+to different categories of elements 
+like for a category payment id1/payment id2
+things to do convert this whole model in spring
+problems : xsd or xml problem different parsing. different
+clear this issue 
+try to do with two xml files
+hover over options
+- for every 
+- for a particular element: if more than 2 ids are added, then option of keeping both
+
+one layer- interacts with xml file, stores the dom element one function to convert into node which it passes into second layer
+second layer- interacts with first layer , includes a instance of first class. 
+ this layer has controllers one for getting node and passing it to jsp's
+ second for ajax's queries 
+ 1. one which takes input of xpath of left and right and adds calls functions to both the instances of dom elements;(drag and drop)
+ 2. one for submitting final changes only for second xml ( submit button)
+ 3. one for adding rules only for second xml ( hover over )- will add rule tags in the second xml file
+ 4. one for deleting elements from second xml: ( hover over only for child elements ) : xpath of parent is transferred along with name of child element
+
+
+ui 
+drag and drop 
