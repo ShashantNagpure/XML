@@ -1,0 +1,198 @@
+<%@page import="org.w3c.dom.Node"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+    <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style>
+ul, .myUL{
+  list-style-type: none;
+}
+
+/* Remove margins and padding from the parent ul */
+.myUL {
+  margin: 0;
+  padding: 0;
+}
+
+/* Style the caret/arrow */
+.caret {
+  cursor: pointer; 
+  user-select: none; /* Prevent text selection */
+}
+
+/* Create the caret/arrow with a unicode, and style it */
+.caret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+.caret-down::before {
+  transform: rotate(90deg); 
+}
+
+/* Hide the nested list */
+.nested {
+  display: none;
+}
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+.active {
+  display: block;
+}
+.gr
+{
+	color:blue
+}
+.attr
+{
+	color:red
+}
+
+* {
+    box-sizing: border-box;
+}
+.column {
+    float: left;
+    width: 50%;
+    padding: 10px;
+  
+
+}
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+</style>
+<script>
+function allowDrop(ev) {
+   ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("pth", ev.target.getAttribute("pth"));
+    ev.dataTransfer.setData("isattr", ev.target.getAttribute("class"));
+    ev.dataTransfer.setData("txt", ev.target.innerText);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var txt= ev.dataTransfer.getData("txt");
+    var pth= ev.dataTransfer.getData("pth");
+    var attr= ev.dataTransfer.getData("isattr");
+   // pth=pth.italics();
+    txt=txt.concat("( : "+pth+" )");
+    var x = document.createElement("LI");
+    var t = document.createTextNode(txt);
+    x.appendChild(t); 
+    if(attr=="attr")
+   {x.classList.add("attr");}
+    else
+    	{x.classList.add("gr");}
+  //  document.getElementById("drop").appendChild(x)
+    ev.target.nextElementSibling.appendChild(x);
+}
+</script>
+</head>
+<body>
+
+<script src="demojs.js"></script>
+   <script src="http://code.jquery.com/jquery-1.5.js"></script>
+   <script>
+    $(document).ready(function() {
+   $("#a").click(function() {
+   $.post("htmlparser", { htm : $( "#cool" ).html()});
+   });
+ });
+    </script>
+<div class="row">
+<div class="column">
+<ul class="myUL">
+
+<li>
+<c:set var="len" value="${node.list.size()}"/>
+<c:choose>
+<c:when test="${len < 1}">
+<c:choose>
+<c:when test="${node.getIsAtt()}">
+<span class="attr" draggable="true" ondragstart="drag(event)" pth="${node.getPath()}" ><c:out value="${node.val}"></c:out></span>
+</c:when>
+<c:otherwise>
+<span class="gr" draggable="true" ondragstart="drag(event)" pth="${node.getPath()}" ><c:out value="${node.val}"></c:out></span>
+</c:otherwise>
+</c:choose>
+</c:when>
+<c:otherwise>
+<c:choose>
+<c:when test="${node.getIsFinal()}">
+<span  draggable="true" ondragstart="drag(event)" pth="${node.getPath()}" class="caret" ><c:out value="${node.val}"></c:out></span>
+</c:when>
+<c:otherwise>
+<span class="caret" ><c:out value="${node.val}"></c:out></span>
+</c:otherwise>
+</c:choose>
+</c:otherwise>
+</c:choose>
+
+  <ul class="nested">
+	<c:forEach var="node" items="${node.list}">
+	<c:set var="node" value="${node}" scope="request"/>
+	<li><jsp:include page="show.jsp"/></li>
+	</c:forEach>
+	</ul>
+	</li>
+	</ul>
+</div>
+<div class="column">
+<ul class="myUL">
+
+<li>
+<c:set var="len2" value="${node2.list.size()}"/>
+<c:choose>
+<c:when test="${len < 1}">
+<c:choose>
+<c:when test="${node.getIsAtt()}">
+<span class="attr" ><c:out value="${node2.val}"></c:out></span>
+</c:when>
+<c:otherwise>
+<span class="gr" ><c:out value="${node2.val}"></c:out></span>
+</c:otherwise>
+</c:choose>
+</c:when>
+<c:otherwise>
+<span class="caret" ondrop="drop(event)" ondragover="allowDrop(event)"><c:out value="${node2.val}"></c:out></span>
+</c:otherwise>
+</c:choose>
+  <ul class="nested">
+	<c:forEach var="node" items="${node2.list}">
+	<c:set var="node" value="${node}" scope="request"/>
+	<li><jsp:include page="show2.jsp"/></li>
+	</c:forEach>
+	</ul>
+	</li>
+	</ul>
+</div>
+
+</div>
+<button id="a">click here</button>
+<script>
+var toggler = document.getElementsByClassName("caret");
+var i;
+
+for (i = 0; i < toggler.length; i++) {
+  toggler[i].addEventListener("click", function() {
+    this.parentElement.querySelector(".nested").classList.toggle("active");
+    this.classList.toggle("caret-down");
+  });
+}
+</script>
+  </body>
+</html>
